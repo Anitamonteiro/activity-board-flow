@@ -14,6 +14,7 @@ interface ActivityCardProps {
   onEdit: (activity: Activity) => void;
   onDelete: (id: string) => void;
   onClick: (activity: Activity) => void;
+  columnColor?: string;
 }
 
 const priorityColors = {
@@ -33,6 +34,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   onEdit,
   onDelete,
   onClick,
+  columnColor = 'bg-blue-500',
 }) => {
   const {
     attributes,
@@ -48,8 +50,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
     transition,
   };
 
-  const isInProgress = activity.status === 'inProgress';
-
   return (
     <Card
       ref={setNodeRef}
@@ -57,13 +57,13 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       {...attributes}
       {...listeners}
       className={cn(
-        "cursor-grab active:cursor-grabbing transition-all duration-200 hover:shadow-lg",
+        "cursor-grab active:cursor-grabbing transition-all duration-200 hover:shadow-lg border-0 overflow-hidden",
         isDragging && "opacity-50 rotate-5 scale-105",
-        isInProgress && "ring-2 ring-blue-400 ring-opacity-75 shadow-lg animate-pulse"
+        columnColor
       )}
       onClick={() => onClick(activity)}
     >
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-3 text-white">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold text-sm leading-tight line-clamp-2">
             {activity.title}
@@ -72,43 +72,43 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             <Button
               size="sm"
               variant="ghost"
-              className="h-6 w-6 p-0 hover:bg-blue-100"
+              className="h-6 w-6 p-0 hover:bg-white/20 text-white"
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(activity);
               }}
             >
-              <Edit className="h-3 w-3 text-blue-600" />
+              <Edit className="h-3 w-3" />
             </Button>
             <Button
               size="sm"
               variant="ghost"
-              className="h-6 w-6 p-0 hover:bg-red-100"
+              className="h-6 w-6 p-0 hover:bg-white/20 text-white"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete(activity.id);
               }}
             >
-              <Trash2 className="h-3 w-3 text-red-600" />
+              <Trash2 className="h-3 w-3" />
             </Button>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0">
-        <p className="text-xs text-gray-600 mb-3 line-clamp-2">
+      <CardContent className="pt-0 text-white">
+        <p className="text-xs text-white/80 mb-3 line-clamp-2">
           {activity.description}
         </p>
         
         <div className="flex items-center justify-between">
           <Badge 
             variant="outline" 
-            className={cn("text-xs font-medium", priorityColors[activity.priority])}
+            className={cn("text-xs font-medium bg-white/20 text-white border-white/30")}
           >
             {priorityLabels[activity.priority]}
           </Badge>
           
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-white/60">
             {activity.updatedAt.toLocaleDateString('pt-BR')}
           </span>
         </div>
